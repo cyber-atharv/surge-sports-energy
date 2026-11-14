@@ -1,7 +1,7 @@
 import { assetUrl } from './lib/asset';
 import { Suspense, useRef, useEffect, useMemo, forwardRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useGLTF, Environment, PerspectiveCamera } from '@react-three/drei';
+import { useGLTF, PerspectiveCamera } from '@react-three/drei';
 import * as THREE from 'three';
 import { useScrollCamera } from './useScrollCamera';
 import DebugCameraPanel from './DebugCameraPanel';
@@ -126,7 +126,7 @@ const Scene = forwardRef(function Scene({ modelPath = assetUrl('/models/bike.glb
           antialias: true,
           alpha: true,
           toneMapping: THREE.ACESFilmicToneMapping,
-          toneMappingExposure: 0.75,
+          toneMappingExposure: 0.85,
         }}
         shadows
         style={{ width: '100%', height: '100%', background: 'transparent' }}
@@ -136,21 +136,21 @@ const Scene = forwardRef(function Scene({ modelPath = assetUrl('/models/bike.glb
         <CameraRig cameraState={cameraState} debugMode={debugMode} />
         {debugMode && <DebugCameraPanel cameraState={cameraState} />}
 
-        <ambientLight intensity={0.3} />
+        <ambientLight intensity={0.45} />
+        <hemisphereLight groundColor="#0a0a0a" color="#ffffff" intensity={0.7} />
         <directionalLight
           position={[4, 6, 4]}
-          intensity={1.3}
+          intensity={1.5}
           castShadow
           shadow-mapSize={[2048, 2048]}
           shadow-bias={-0.0005}
         />
-        <directionalLight position={[-4, 1.5, -3]} intensity={0.4} />
-        <directionalLight position={[-2, 3, -5]} intensity={0.6} color="#cfe0ff" />
-        <directionalLight position={[0, 8, 0]} intensity={0.3} />
+        <directionalLight position={[-4, 1.5, -3]} intensity={0.5} />
+        <directionalLight position={[-2, 3, -5]} intensity={0.8} color="#cfe0ff" />
+        <directionalLight position={[0, 8, 0]} intensity={0.4} />
 
         <Suspense fallback={null}>
           <Bike modelPath={modelPath} />
-          <Environment preset="studio" environmentIntensity={0.4} />
           <GroundShadow />
         </Suspense>
       </Canvas>

@@ -39,7 +39,7 @@ export default function Preloader() {
   useEffect(() => {
     const timer = setTimeout(() => {
       targetRef.current = 100;
-    }, 4000);
+    }, 15000);
     return () => clearTimeout(timer);
   }, []);
 
