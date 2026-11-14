@@ -1,3 +1,4 @@
+import { assetUrl } from './lib/asset';
 import { useEffect, useState, useRef } from 'react';
 import gsap from 'gsap';
 import Scene from './Scene';
@@ -10,9 +11,9 @@ import { useSectionInView } from './useSectionInView';
 // Only 3 real GLB models exist. Colors match each model's actual paint,
 // not an arbitrary palette — bike.glb's frame is red, so its glow is red.
 const BIKES = [
-  { name: 'Ridge', model: '/models/bike.glb', color: '#ef4444', glow: '#991b1b' },
-  { name: 'Vortex', model: '/models/bike-vortex.glb', color: '#22c55e', glow: '#15803d' },
-  { name: 'Spectra', model: '/models/bike-spectra.glb', color: '#f59e0b', glow: '#b45309' },
+  { name: 'Ridge', model: assetUrl('/models/bike.glb'), color: '#ef4444', glow: '#991b1b' },
+  { name: 'Vortex', model: assetUrl('/models/bike-vortex.glb'), color: '#22c55e', glow: '#15803d' },
+  { name: 'Spectra', model: assetUrl('/models/bike-spectra.glb'), color: '#f59e0b', glow: '#b45309' },
 ];
 
 // Hook: fades a fixed hero-only layer out as the user scrolls past section 1.
@@ -78,7 +79,7 @@ function HeroBackdrop({ name, color, glow }) {
           fixed px/vw values. Using vh here instead keeps it tracking the
           bike consistently across viewport heights. */}
       <img
-        src="/images/rock-pedestal.png"
+        src={assetUrl("/images/rock-pedestal.png")}
         alt=""
         className="absolute left-1/2 -translate-x-1/2 w-[1000px] max-w-[78vw] object-contain brightness-50 contrast-125"
         style={{ bottom: '-2vh' }}
@@ -554,7 +555,7 @@ export default function App() {
                 <span>→</span>
               </button>
               <p className="text-gray-600 text-[10px] sm:text-xs tracking-widest uppercase mt-1 sm:mt-2">
-                © 2026 Speactra — All Rights Reserved
+                © 2026 Surge Performance Bikes • Designed & Built by Atharv Hogade • GitHub: @cyber-atharv • Email: atharvhogade12@gmail.com
               </p>
             </div>
           </Fade>

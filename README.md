@@ -1,16 +1,63 @@
-# React + Vite
+# Surge Sports & Performance Bikes
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+> An ultra-realistic, interactive 3D sports mountain bike showcase built with React 19, Three.js, React Three Fiber, and GSAP scroll-triggered camera kinematics.
 
-Currently, two official plugins are available:
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-brightgreen?style=for-the-badge&logo=github)](https://cyber-atharv.github.io/surge-sports-energy/)
+[![Author](https://img.shields.io/badge/Author-Atharv%20Hogade-blue?style=for-the-badge)](https://github.com/cyber-atharv)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## ⚡ Live Deployment
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Experience the interactive 3D engineering showcase:
+👉 **[https://cyber-atharv.github.io/surge-sports-energy/](https://cyber-atharv.github.io/surge-sports-energy/)**
 
-## Expanding the Oxlint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## ✨ Features
+
+- **Interactive 3D GLTF Bike Variants**: High-fidelity Ridge, Vortex, and Spectra bike models loaded and rendered in real-time.
+- **Scroll-Synchronized Cinematic Camera**: Seamless GSAP camera motion tracking frame-by-frame as you navigate through drivetrain, frame weight, and geometry sections.
+- **Dynamic Lighting & Shaders**: Ambient studio environment maps, custom specular highlights, and real-time shadows.
+- **Fluid Responsive Controls**: Smooth touch, trackpad, and mouse interaction with interactive variant carousels.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework**: React 19 with Vite
+- **3D & Graphics**: Three.js, `@react-three/fiber`, `@react-three/drei`
+- **Animations**: GSAP
+- **Styling**: Tailwind CSS v4
+
+---
+
+## 🚀 Getting Started
+
+```bash
+# Clone the repository
+git clone https://github.com/cyber-atharv/surge-sports-energy.git
+
+# Navigate into project directory
+cd surge-sports-energy
+
+# Install dependencies
+npm install
+
+# Run local development server
+npm run dev
+```
+
+Open [http://localhost:5173](http://localhost:5173) to view it in your browser.
+
+---
+
+## 👨‍💻 Author
+
+**Atharv Hogade**
+- **GitHub**: [@cyber-atharv](https://github.com/cyber-atharv)
+- **Email**: [atharvhogade12@gmail.com](mailto:atharvhogade12@gmail.com)
+
+---
+
+*Licensed under the MIT License.*
