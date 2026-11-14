@@ -1,3 +1,4 @@
+import { assetUrl } from './lib/asset';
 import { Suspense, useRef, useEffect, useMemo, forwardRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF, Environment, PerspectiveCamera } from '@react-three/drei';
@@ -131,7 +132,7 @@ function CameraRig({ cameraState, debugMode }) {
 // carousel's next/prev handlers in App.jsx can GSAP-animate its transform
 // (slide out left/right, swap model, slide back in) without touching the
 // 3D camera system at all — a pure DOM-level slide on top of the WebGL output.
-const Scene = forwardRef(function Scene({ modelPath = '/models/bike.glb' }, ref) {
+const Scene = forwardRef(function Scene({ modelPath = assetUrl('/models/bike.glb') }, ref) {
   const debugMode = isDebugMode();
   const cameraState = useScrollCamera(debugMode);
 
@@ -181,6 +182,6 @@ const Scene = forwardRef(function Scene({ modelPath = '/models/bike.glb' }, ref)
 
 export default Scene;
 
-useGLTF.preload('/models/bike.glb');
-useGLTF.preload('/models/bike-vortex.glb');
-useGLTF.preload('/models/bike-spectra.glb');
+useGLTF.preload(assetUrl('/models/bike.glb'));
+useGLTF.preload(assetUrl('/models/bike-vortex.glb'));
+useGLTF.preload(assetUrl('/models/bike-spectra.glb'));
