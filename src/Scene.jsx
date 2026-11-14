@@ -12,13 +12,6 @@ const isDebugMode = () =>
 // AI-generated GLBs often arrive at an arbitrary scale/origin. Bike
 // auto-normalizes to TARGET_HEIGHT world units and re-centers on load so the
 // hand-tuned camera keyframes in useScrollCamera.js apply consistently.
-// Nudge these once the real bike.glb's proportions are known.
-//
-// Normalize by HEIGHT (size.y), not the longest dimension — the 3 bike
-// models have slightly different length/height ratios, so scaling by
-// "max dimension" (usually length) made each one sit at a different
-// visual height in the carousel even with an identical camera. Height is
-// the one dimension that must match across variants for a fixed framing.
 const TARGET_HEIGHT = 1.1;
 const MODEL_OFFSET = [0, 0, 0];
 const MODEL_SCALE = 1;
@@ -27,12 +20,6 @@ function Bike({ modelPath }) {
   const { scene } = useGLTF(modelPath);
 
   useEffect(() => {
-    // useGLTF caches scenes by URL, so revisiting a bike REMOUNTS this
-    // component with the SAME already-normalized scene object. Measuring
-    // its bounding box without resetting transforms first would measure
-    // the already-scaled result, not the native size — producing a
-    // different "corrected" scale each time (an oscillating big/small/big
-    // bug). Reset to identity first so every run measures native geometry.
     scene.scale.set(1, 1, 1);
     scene.position.set(0, 0, 0);
     scene.updateMatrixWorld(true);
@@ -103,7 +90,6 @@ function CameraRig({ cameraState, debugMode }) {
     if (!camRef.current) return;
     const { position, target, fov } = cameraState.current;
 
-    // Debug mode: snap 1:1 to slider values, no smoothing lag.
     const lerpFactor = debugMode ? 1 : 0.08;
 
     camRef.current.position.lerp(new THREE.Vector3(position[0], position[1], position[2]), lerpFactor);
@@ -128,10 +114,6 @@ function CameraRig({ cameraState, debugMode }) {
   );
 }
 
-// forwardRef exposes the outer wrapper (not the Canvas itself) so the
-// carousel's next/prev handlers in App.jsx can GSAP-animate its transform
-// (slide out left/right, swap model, slide back in) without touching the
-// 3D camera system at all — a pure DOM-level slide on top of the WebGL output.
 const Scene = forwardRef(function Scene({ modelPath = assetUrl('/models/bike.glb') }, ref) {
   const debugMode = isDebugMode();
   const cameraState = useScrollCamera(debugMode);
@@ -155,7 +137,6 @@ const Scene = forwardRef(function Scene({ modelPath = assetUrl('/models/bike.glb
         {debugMode && <DebugCameraPanel cameraState={cameraState} />}
 
         <ambientLight intensity={0.3} />
-        {/* key light */}
         <directionalLight
           position={[4, 6, 4]}
           intensity={1.3}
@@ -163,11 +144,8 @@ const Scene = forwardRef(function Scene({ modelPath = assetUrl('/models/bike.glb
           shadow-mapSize={[2048, 2048]}
           shadow-bias={-0.0005}
         />
-        {/* fill light */}
         <directionalLight position={[-4, 1.5, -3]} intensity={0.4} />
-        {/* rim light */}
         <directionalLight position={[-2, 3, -5]} intensity={0.6} color="#cfe0ff" />
-        {/* soft top-down bounce to lighten shadow side */}
         <directionalLight position={[0, 8, 0]} intensity={0.3} />
 
         <Suspense fallback={null}>
@@ -183,5 +161,9 @@ const Scene = forwardRef(function Scene({ modelPath = assetUrl('/models/bike.glb
 export default Scene;
 
 useGLTF.preload(assetUrl('/models/bike.glb'));
-useGLTF.preload(assetUrl('/models/bike-vortex.glb'));
-useGLTF.preload(assetUrl('/models/bike-spectra.glb'));
+if (typeof window !== 'undefined') {
+  setTimeout(() => {
+    useGLTF.preload(assetUrl('/models/bike-vortex.glb'));
+    useGLTF.preload(assetUrl('/models/bike-spectra.glb'));
+  }, 3000);
+}

@@ -1,50 +1,46 @@
 import { useEffect, useState, useRef } from 'react';
+import { useProgress } from '@react-three/drei';
 
 // Circular wheel-outline loader: an SVG ring shaped like a bicycle wheel
 // (rim + spokes) draws itself in as an actual 0-100% counter ticks up,
 // tracking real page load instead of a canned animation. Sits above
-// everything until the window fires 'load', then fades out and unmounts.
+// everything until the 3D assets finish loading, then fades out and unmounts.
 export default function Preloader() {
   const [percent, setPercent] = useState(0);
   const [done, setDone] = useState(false);
   const [hidden, setHidden] = useState(false);
   const targetRef = useRef(0);
+  const { active, progress } = useProgress();
 
   useEffect(() => {
-    // Advance a soft "believable" progress target while real resources
-    // load, but never let the displayed number claim 100 until the
-    // window actually finishes loading.
     let raf;
     const tick = () => {
       setPercent((p) => {
         const target = targetRef.current;
-        const next = p + (target - p) * 0.08 + 0.15;
+        const next = p + (target - p) * 0.08 + 0.25;
         return Math.min(next, target);
       });
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
 
-    const bump = setInterval(() => {
-      targetRef.current = Math.min(targetRef.current + Math.random() * 8, 90);
-    }, 220);
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
-    const finish = () => {
-      clearInterval(bump);
-      targetRef.current = 100;
-    };
-
-    if (document.readyState === 'complete') {
-      finish();
+  useEffect(() => {
+    if (active) {
+      targetRef.current = Math.max(targetRef.current, Math.min(progress, 95));
     } else {
-      window.addEventListener('load', finish);
+      targetRef.current = 100;
     }
+  }, [active, progress]);
 
-    return () => {
-      cancelAnimationFrame(raf);
-      clearInterval(bump);
-      window.removeEventListener('load', finish);
-    };
+  // Safety fallback if progress is already complete or doesn't trigger active
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      targetRef.current = 100;
+    }, 4000);
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -70,9 +66,7 @@ export default function Preloader() {
     >
       <div className="relative w-[180px] h-[180px] flex items-center justify-center">
         <svg width="180" height="180" viewBox="0 0 180 180" className="-rotate-90">
-          {/* static faint wheel outline */}
           <circle cx="90" cy="90" r={radius} fill="none" stroke="#ffffff14" strokeWidth="2" />
-          {/* spokes, like a bicycle wheel */}
           {Array.from({ length: 12 }).map((_, i) => {
             const angle = (i * Math.PI) / 6;
             const x1 = 90 + Math.cos(angle) * 14;
@@ -92,29 +86,26 @@ export default function Preloader() {
             );
           })}
           <circle cx="90" cy="90" r="14" fill="none" stroke="#ffffff1a" strokeWidth="2" />
-
-          {/* animated progress ring */}
           <circle
             cx="90"
             cy="90"
             r={radius}
             fill="none"
             stroke="#ef4444"
-            strokeWidth="2.5"
-            strokeLinecap="round"
+            strokeWidth="3"
             strokeDasharray={circumference}
             strokeDashoffset={offset}
-            style={{ filter: 'drop-shadow(0 0 6px #ef444499)' }}
+            strokeLinecap="round"
+            className="transition-all duration-75"
           />
         </svg>
 
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="font-display text-white text-3xl tabular-nums leading-none">
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+          <span className="font-display text-white text-3xl font-bold leading-none tracking-tight">
             {shown}
-            <span className="text-lg align-top">%</span>
           </span>
-          <span className="text-gray-500 text-[10px] tracking-[0.3em] uppercase mt-2">
-            Speactra
+          <span className="text-[10px] text-gray-500 uppercase tracking-[0.25em] mt-1 font-semibold">
+            {shown >= 100 ? 'READY' : 'LOADING'}
           </span>
         </div>
       </div>
